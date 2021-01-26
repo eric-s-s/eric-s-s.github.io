@@ -98,7 +98,7 @@ function getTable(tableForm) {
             const errorJson = jqXHR.responseJSON;
             alert(
                 jqXHR.status + ': ' + jqXHR.statusText + '\n' +
-                'error type: ' + errorJson.type + '\ndetails: ' + errorJson.error
+                'error type: ' + errorJson.errorType + '\ndetails: ' + errorJson.errorMessage
             );
         }
     );
