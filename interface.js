@@ -90,6 +90,7 @@ function getTable(tableForm) {
         url: "https://kpt1e43ea7.execute-api.us-east-1.amazonaws.com/default/_construct",
         data: JSON.stringify({"buildString": requestStr}),
         success: function (data) {processNewData($(tableForm), data);},
+        timeout: 0,
     }).fail(
         function (jqXHR) {
             console.log(jqXHR);
