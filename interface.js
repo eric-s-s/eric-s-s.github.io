@@ -74,27 +74,45 @@ function setUpExample(exampleStr) {
     return toAlter;
 }
 
-function processNewData(tableRequestJQuery, data) {
+function processNewData(tableRequestJQuery, data, unlockCallback) {
     console.log(data);
     tableRequestJQuery.data('tableObj', data);
     plotCurrentTables();
     resetStatsTable();
     clearRollResults(tableRequestJQuery);
     assignRollers();
+    unlockCallback(tableRequestJQuery)
 }
 
 function getTable(tableForm) {
+    const isLockedKey = "isLocked"
+    lockForm = function(formJquery) {
+        tableFormJQuery.data(isLockedKey, true)
+        tableFormJQuery.children().css('background-color', 'grey')
+    }
+
+    unlockForm = function(formJquery) {
+        tableFormJQuery.data(isLockedKey, false)
+        tableFormJQuery.children().removeAttr('style')
+    }
+
+    const tableFormJQuery =$(tableForm)
+    if (tableFormJQuery.data(isLockedKey)) {
+        return
+    }
+    lockForm(tableFormJQuery)
     const requestStr = tableForm.tableQuery.value;
     $.ajax({
         type: "POST",
         url: "https://kpt1e43ea7.execute-api.us-east-1.amazonaws.com/default/_construct",
         data: JSON.stringify({"buildString": requestStr}),
-        success: function (data) {processNewData($(tableForm), data);},
+        success: function (data) {processNewData($(tableForm), data, unlockForm);},
         timeout: 0,
     }).fail(
         function (jqXHR) {
             console.log(jqXHR);
             /** @namespace jqXHR.responseJSON */
+            unlockForm(tableFormJQuery)
             const errorJson = jqXHR.responseJSON;
             alert(
                 jqXHR.status + ': ' + jqXHR.statusText + '\n' +
