@@ -74,45 +74,35 @@ function setUpExample(exampleStr) {
     return toAlter;
 }
 
-function processNewData(tableRequestJQuery, data, unlockCallback) {
+function processNewData(tableRequestJQuery, data) {
+    unlockForm(tableRequestJQuery);
     console.log(data);
     tableRequestJQuery.data('tableObj', data);
     plotCurrentTables();
     resetStatsTable();
     clearRollResults(tableRequestJQuery);
     assignRollers();
-    unlockCallback(tableRequestJQuery)
 }
 
 function getTable(tableForm) {
-    const isLockedKey = "isLocked"
-    lockForm = function(formJquery) {
-        tableFormJQuery.data(isLockedKey, true)
-        tableFormJQuery.children().css('background-color', 'grey')
-    }
-
-    unlockForm = function(formJquery) {
-        tableFormJQuery.data(isLockedKey, false)
-        tableFormJQuery.children().removeAttr('style')
-    }
 
     const tableFormJQuery =$(tableForm)
     if (tableFormJQuery.data(isLockedKey)) {
         return
     }
-    lockForm(tableFormJQuery)
+    lockForm(tableFormJQuery);
     const requestStr = tableForm.tableQuery.value;
     $.ajax({
         type: "POST",
         url: "https://kpt1e43ea7.execute-api.us-east-1.amazonaws.com/default/_construct",
         data: JSON.stringify({"buildString": requestStr}),
-        success: function (data) {processNewData($(tableForm), data, unlockForm);},
+        success: function (data) {processNewData($(tableForm), data);},
         timeout: 0,
     }).fail(
         function (jqXHR) {
+            unlockForm(tableFormJQuery);
             console.log(jqXHR);
             /** @namespace jqXHR.responseJSON */
-            unlockForm(tableFormJQuery)
             const errorJson = jqXHR.responseJSON;
             alert(
                 jqXHR.status + ': ' + jqXHR.statusText + '\n' +
@@ -122,8 +112,20 @@ function getTable(tableForm) {
     );
 }
 
+const isLockedKey = "isLocked"
+function lockForm(formJquery) {
+    tableFormJQuery.data(isLockedKey, true);
+    tableFormJQuery.children().css('background-color', 'grey');
+}
+
+function unlockForm(formJquery) {
+    tableFormJQuery.data(isLockedKey, false);
+    tableFormJQuery.children().removeAttr('style');
+}
+
 function hideTableForm(idStr) {
     const theForm = $('#' + idStr);
+    unlockForm(theForm);
     theForm.hide();
     theForm.data('tableObj', null);
     theForm[0].reset();
