@@ -114,13 +114,13 @@ function getTable(tableForm) {
 
 const isLockedKey = "isLocked"
 function lockForm(formJquery) {
-    tableFormJQuery.data(isLockedKey, true);
-    tableFormJQuery.children().css('background-color', 'grey');
+    formJquery.data(isLockedKey, true);
+    formJQuery.children().css('background-color', 'grey');
 }
 
 function unlockForm(formJquery) {
-    tableFormJQuery.data(isLockedKey, false);
-    tableFormJQuery.children().removeAttr('style');
+    formJquery.data(isLockedKey, false);
+    formJquery.children().removeAttr('style');
 }
 
 function hideTableForm(idStr) {
