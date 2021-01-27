@@ -86,7 +86,7 @@ function processNewData(tableRequestJQuery, data) {
 
 function getTable(tableForm) {
 
-    const tableFormJQuery =$(tableForm)
+    const tableFormJQuery = $(tableForm);
     if (tableFormJQuery.data(isLockedKey)) {
         return
     }
@@ -113,14 +113,14 @@ function getTable(tableForm) {
 }
 
 const isLockedKey = "isLocked"
-function lockForm(formJquery) {
-    formJquery.data(isLockedKey, true);
+function lockForm(formJQuery) {
+    formJQuery.data(isLockedKey, true);
     formJQuery.children().css('background-color', 'grey');
 }
 
-function unlockForm(formJquery) {
-    formJquery.data(isLockedKey, false);
-    formJquery.children().removeAttr('style');
+function unlockForm(formJQuery) {
+    formJQuery.data(isLockedKey, false);
+    formJQuery.children().removeAttr('style');
 }
 
 function hideTableForm(idStr) {
